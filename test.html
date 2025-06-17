@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Demo nhóm 3 - Băm chuỗi và file</title>
+  <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      text-align: center;
+    }
+    .container {
+      width: 60%;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #007bff;
+    }
+    input[type="text"], input[type="file"] {
+      padding: 10px;
+      width: 80%;
+      margin: 10px 0;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .hash-box {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 8px;
+      background-color: #fafafa;
+      text-align: left;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Demo nhóm 3</h1>
+    <h2>Băm văn bản dạng MD5 và SHA-256</h2>
+
+    <input type="text" id="inputString" placeholder="Nhập chuỗi cần băm" />
+    <br>
+    <button onclick="hashString()">Băm Chuỗi</button>
+
+    <hr style="margin: 30px 0;">
+
+    <h2>Băm File (ảnh, video...)</h2>
+    <input type="file" id="inputFile" />
+    <br>
+    <button onclick="hashFile()">Băm File</button>
+
+    <div class="hash-box" id="result" style="display:none;">
+      <p><strong>MD5:</strong> <span id="md5Result"></span></p>
+      <p><strong>SHA-256:</strong> <span id="sha256Result"></span></p>
+    </div>
+  </div>
+
+  <script>
+    function hashString() {
+      const inputString = document.getElementById("inputString").value;
+      if (!inputString) return alert("Vui lòng nhập chuỗi!");
+
+      const md5 = CryptoJS.MD5(inputString).toString();
+      const sha256 = CryptoJS.SHA256(inputString).toString();
+
+      document.getElementById("md5Result").innerText = md5;
+      document.getElementById("sha256Result").innerText = sha256;
+      document.getElementById("result").style.display = "block";
+    }
+
+    function hashFile() {
+      const fileInput = document.getElementById("inputFile");
+      const file = fileInput.files[0];
+      if (!file) return alert("Vui lòng chọn file!");
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const wordArray = CryptoJS.lib.WordArray.create(e.target.result);
+        const md5 = CryptoJS.MD5(wordArray).toString();
+        const sha256 = CryptoJS.SHA256(wordArray).toString();
+
+        document.getElementById("md5Result").innerText = md5;
+        document.getElementById("sha256Result").innerText = sha256;
+        document.getElementById("result").style.display = "block";
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  </script>
+</body>
+</html>
